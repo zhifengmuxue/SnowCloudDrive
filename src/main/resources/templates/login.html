@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #F0F4F3 linear-gradient(to right, #f8cdda, #77ebd8);
+        }
+
+        .main {
+            width: 600px;
+            height: 440px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .a-container {
+            background-color: #ffffff;
+            transform: translateX(0);
+        }
+
+        .b-container {
+            background-color: #ffffff;
+            transform: translateX(100%);
+        }
+
+        .form {
+            width: 400px;
+            text-align: center;
+        }
+
+        .form__input {
+            width: 100%;
+            height: 40px;
+            margin: 10px 0;
+            padding-left: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .button {
+            width: 100%;
+            height: 40px;
+            background-color: #1ac276;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="main">
+    <div class="container a-container" id="a-container">
+        <form id="a-form" class="form" th:action="@{/login}" method="post">
+            <h2>SnowCloudDrive 登录</h2>
+            <label>
+                <input class="form__input" type="text" name="username" id="username" placeholder="用户名" required>
+            </label>
+            <label>
+                <input class="form__input" type="password" name="password" id="password" placeholder="密码" required>
+            </label>
+
+            <button class="button submit" type="submit">登录</button>
+        </form>
+    </div>
+
+    <div class="container b-container" id="b-container">
+        <form id="b-form" class="form">
+            <h2>创建账户</h2>
+            <label>
+                <input class="form__input" type="text" placeholder="用户名" name="username" required>
+            </label>
+            <label>
+                <input class="form__input" type="email" placeholder="邮箱" name="email" required>
+            </label>
+            <label>
+                <input class="form__input" type="password" placeholder="密码" name="password" required>
+            </label>
+            <button class="button submit">注册</button>
+        </form>
+    </div>
+
+    <div class="switch" id="switch-btn">
+        <span>登录 / 注册</span>
+    </div>
+</div>
+
+<script>
+    const switchBtn = document.getElementById('switch-btn');
+    const aContainer = document.getElementById('a-container');
+    const bContainer = document.getElementById('b-container');
+
+    let isLogin = false;
+
+    switchBtn.addEventListener('click', () => {
+        isLogin = !isLogin;
+        if (isLogin) {
+            aContainer.style.transform = 'translateX(-100%)';
+            bContainer.style.transform = 'translateX(0)';
+        } else {
+            aContainer.style.transform = 'translateX(0)';
+            bContainer.style.transform = 'translateX(100%)';
+        }
+    });
+</script>
+</body>
+</html>
