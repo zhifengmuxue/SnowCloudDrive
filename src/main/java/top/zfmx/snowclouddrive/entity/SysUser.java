@@ -4,14 +4,17 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Getter
+@Data
+@NoArgsConstructor(force = true)
 @AllArgsConstructor
 public class SysUser implements Serializable{
     @Serial
@@ -20,16 +23,10 @@ public class SysUser implements Serializable{
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
 
-    @Length(min = 2,max = 20)
-    private final String username;
+    private String username;
+    private String password;
 
-    @Length(min = 6,max = 20)
-    private final String password;
-    
-    @Email
-    private final String email;
-
-    private final String role;
+    private String role;
     private final boolean isEnable;
     private final LocalDateTime createTime;
     private final LocalDateTime updateTime;

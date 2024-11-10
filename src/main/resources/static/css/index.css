@@ -1,0 +1,62 @@
+body {
+    background-color: #e0f7fa;
+}
+
+.navbar {
+    background-color: #009688;
+}
+
+.navbar-brand, .nav-link {
+    color: #ffffff !important;
+}
+
+.item {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.item:hover {
+    background-color: #b2dfdb;
+}
+
+.btn-primary {
+    background-color: #4db6ac;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #26a69a;
+}
+
+.btn-danger {
+    background-color: #f44336;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #e53935;
+}
+
+.item-name {
+    flex-grow: 1;
+    padding: 0 10px;
+}
+
+.btn-sm {
+    margin-left: 5px;
+}
+
+.file-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}

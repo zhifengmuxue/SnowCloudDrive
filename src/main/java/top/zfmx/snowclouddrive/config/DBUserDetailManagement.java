@@ -17,7 +17,7 @@ public class DBUserDetailManagement implements UserDetailsManager, UserDetailsPa
     private final SysUserMapper systemUserMapper;
 
     @Autowired
-    public DBUserDetailManagement(SysUserMapper systemUserMapper) {
+    public DBUserDetailManagement( SysUserMapper systemUserMapper) {
         this.systemUserMapper = systemUserMapper;
     }
 
@@ -28,7 +28,14 @@ public class DBUserDetailManagement implements UserDetailsManager, UserDetailsPa
 
     @Override
     public void createUser(UserDetails user) {
-
+        if (userExists(user.getUsername())) {
+            throw new IllegalArgumentException("用户已存在");
+        }
+        SysUser sysUser = new SysUser();
+        sysUser.setUsername(user.getUsername());
+        sysUser.setPassword(user.getPassword());
+        sysUser.setRole(user.getAuthorities().toString());
+        systemUserMapper.insert(sysUser);
     }
 
     @Override
@@ -48,7 +55,10 @@ public class DBUserDetailManagement implements UserDetailsManager, UserDetailsPa
 
     @Override
     public boolean userExists(String username) {
-        return false;
+        QueryWrapper<SysUser> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.lambda().eq(SysUser::getUsername, username);
+        SysUser user = systemUserMapper.selectOne(userQueryWrapper);
+        return user != null;
     }
 
     @Override
