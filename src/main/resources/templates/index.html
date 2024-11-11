@@ -24,10 +24,10 @@
                     <a class="nav-link active" aria-current="page" href="#">首页</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">我的文件</a>
+                    <a class="nav-link" href="/">我的文件</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">上传文件</a>
+                    <button class="nav-link btn btn-link" data-bs-toggle="modal" data-bs-target="#uploadFileModal">上传文件</button>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">设置</a>
@@ -39,69 +39,55 @@
         </div>
     </div>
 </nav>
-
+<h1 class="text-center mb-4" style="margin-top: 20px;">我的文件</h1>
 <div class="container mt-4">
-    <!-- 面包屑导航 -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">首页</a></li>
-            <li class="breadcrumb-item active" aria-current="page">我的文件</li>
-        </ol>
-    </nav>
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/">我的文件</a></li>
+                <th:block th:each="folder : ${breadcrumb}">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/?folderId={id}(id=${folder.id})}" th:text="${folder.folderName}">Folder Name</a>
+                    </li>
+                </th:block>
+            </ol>
+        </nav>
 
-    <h1 class="text-center mb-4">我的文件</h1>
-
-    <div class="mb-3 text-end">
-        <button class="btn btn-success" style="background-color: #4eb7ad" data-bs-toggle="modal" data-bs-target="#createFolderModal">新建文件夹</button>
+        <button class="btn btn-success" style="background-color: #4eb7ad"
+                th:onclick="${currentFolder != null} ? 'setFolderId(' + ${currentFolder.id} + ')' : 'setFolderId(null)'">新建文件夹</button>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-            <!-- 文件夹和文件示例 -->
-            <div class="item" onclick="openFolder('文件夹1')">
-                <div class="item-name">文件夹1</div>
-                <div>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#renameModal">重命名</button>
-                    <button class="btn btn-danger btn-sm">删除</button>
-                </div>
-            </div>
-            <div class="item" onclick="openFolder('文件夹2')">
-                <div class="item-name">文件夹2</div>
-                <div>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#renameModal">重命名</button>
-                    <button class="btn btn-danger btn-sm">删除</button>
-                </div>
-            </div>
-            <div class="item">
-                <div class="file-info">
-                    <div class="item-name">文件名.txt</div>
+
+            <div class="file-list">
+                <div th:each="folder : ${folders}" class="item">
+                    <div class="item-name" th:text="${folder.folderName}"></div>
                     <div>
-                        <span class="me-2">文件大小: 15 KB</span>
-                        <button class="btn btn-primary btn-sm">下载</button>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#renameModal">重命名</button>
-                        <button class="btn btn-danger btn-sm">删除</button>
+                        <a th:href="@{/?folderId={id}(id=${folder.id})}" style="color: transparent;">
+                            <button class="btn btn-primary btn-sm">打开</button>
+                        </a>
+                        <button class="btn btn-primary btn-sm"
+                                th:onclick="openRenameFolderModal([[${folder.id}]], [[${folder.folderName}]])">重命名</button>
+                        <button class="btn btn-danger btn-sm" th:onclick="openDeleteFolderConfirmModal([[${folder.id}]])">删除</button>
                     </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="file-info">
-                    <div class="item-name">图片.png</div>
-                    <div>
-                        <span class="me-2">文件大小: 200 KB</span>
-                        <button class="btn btn-primary btn-sm">下载</button>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#renameModal">重命名</button>
-                        <button class="btn btn-danger btn-sm">删除</button>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="file-info">
-                    <div class="item-name">文档.pdf</div>
-                    <div>
-                        <span class="me-2">文件大小: 1.2 MB</span>
-                        <button class="btn btn-primary btn-sm">下载</button>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#renameModal">重命名</button>
-                        <button class="btn btn-danger btn-sm">删除</button>
+
+                <div th:each="file : ${files}" class="item">
+                    <div class="file-info">
+                        <div class="item-name" th:text="${file.filename}"></div>
+                        <div>
+                            <span class="me-2" th:text="'文件大小: ' + ${file.size}"></span>
+                            <a th:href="@{/file/download(fileid=${file.id})}" style="color: transparent;">
+                                <button class="btn btn-primary btn-sm">下载</button>
+                            </a>
+
+                            <button class="btn btn-primary btn-sm"
+                                    th:onclick="openRenameModal([[${file.id}]], [[${file.filename}]])">
+                                重命名</button>
+                            <button class="btn btn-danger btn-sm"
+                                    th:onclick="openDeleteConfirmModal([[${file.id}]])">删除</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,6 +95,84 @@
     </div>
 </div>
 
+<!--重命名-->
+<div class="modal fade" id="renameModal" tabindex="-1" aria-labelledby="renameModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fileRenameModalLabel">重命名</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/file/rename}" method="post">
+                    <div class="mb-3">
+                        <label for="newName" class="form-label">新名称</label>
+                        <input type="text" class="form-control" id="newName" name="newName" required>
+                    </div>
+                    <input type="hidden" id="fileId" name="fileId">
+<!--                    <input type="hidden" id="renameCurrentFolderId" name="currentFolderId">-->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">重命名</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 文件上传 -->
+<div class="modal fade" id="uploadFileModal" tabindex="-1" aria-labelledby="uploadFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadFileModalLabel">上传文件</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadFileForm" th:action="@{/file/upload}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="fileName" class="form-label">文件名</label>
+                        <input type="text" class="form-control" id="fileName" name="fileName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fileInput" class="form-label">选择文件</label>
+                        <input type="file" class="form-control" id="fileInput" name="fileInput" required onchange="updateFileName()">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">上传</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 删除 -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">确认删除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/file/delete}" method="post">
+                    <p>您确定要删除此文件吗？此操作无法撤销。</p>
+                    <input type="hidden" id="deleteFileId" name="deleteFileId">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-danger">删除</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新建文件夹 -->
 <div class="modal fade" id="createFolderModal" tabindex="-1" aria-labelledby="createFolderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -117,43 +181,67 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form th:action="@{/fileFolder/create}" method="post">
                     <div class="mb-3">
                         <label for="folderName" class="form-label">文件夹名称</label>
-                        <input type="text" class="form-control" id="folderName" required>
+                        <input type="text" class="form-control" id="folderName" name="folderName" required>
+                    </div>
+                    <input type="hidden" id="createCurrentFolderId" name="currentFolderId">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">创建</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="createFolder">创建</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="renameModal" tabindex="-1" aria-labelledby="renameModalLabel" aria-hidden="true">
+<!-- 重命名文件夹 -->
+<div class="modal fade" id="renameFolderModal" tabindex="-1" aria-labelledby="renameFolderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="renameModalLabel">重命名</h5>
+                <h5 class="modal-title" id="renameFolderModalLabel">重命名文件夹</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form th:action="@{/fileFolder/rename}" method="post">
                     <div class="mb-3">
-                        <label for="newName" class="form-label">新名称</label>
-                        <input type="text" class="form-control" id="newName" required>
+                        <label for="newFolderName" class="form-label">新文件夹名称</label>
+                        <input type="text" class="form-control" id="newFolderName" name="newFolderName" required>
+                    </div>
+                    <input type="hidden" id="folderId" name="folderId">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">重命名</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">重命名</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- 删除文件夹 -->
+<div class="modal fade" id="deleteFolderConfirmModal" tabindex="-1" aria-labelledby="deleteFolderConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteFolderConfirmModalLabel">确认删除文件夹</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/fileFolder/delete}" method="post">
+                    <p>您确定要删除此文件夹吗(包含所有文件)？此操作无法撤销。</p>
+                    <input type="hidden" id="deleteFolderId" name="deleteFolderId">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-danger">删除</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

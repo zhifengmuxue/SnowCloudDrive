@@ -11,21 +11,18 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor(force = true)
 @AllArgsConstructor
-public class SysUser implements Serializable{
+@NoArgsConstructor
+public class FileFolder implements Serializable {
     @Serial
     private static final long serialVersionUID = 65535L;
 
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
-
-    private String username;
-    private String password;
-
-    private String role;
-    private boolean isEnable;
-    private final LocalDateTime createTime;
-    private final LocalDateTime updateTime;
-
+    private String folderName;
+    private String path;
+    private Integer ownerId;
+    private Integer parentId;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

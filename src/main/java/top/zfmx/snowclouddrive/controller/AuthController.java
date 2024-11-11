@@ -14,11 +14,10 @@ import top.zfmx.snowclouddrive.service.SysUserService;
 public class AuthController {
 
     private final SysUserService sysUserService;
-    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public AuthController(SysUserService sysUserService, PasswordEncoder passwordEncoder) {
         this.sysUserService = sysUserService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping("/login")
@@ -38,9 +37,6 @@ public class AuthController {
         SysUser sysUser = new SysUser();
         sysUser.setUsername(username);
         sysUser.setPassword(password);
-
-        System.out.println(sysUser.getUsername());
-        System.out.println(sysUser.getPassword());
 
         sysUserService.createUser(sysUser);
         return "login";

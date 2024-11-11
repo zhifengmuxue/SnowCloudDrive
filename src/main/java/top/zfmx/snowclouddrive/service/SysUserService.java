@@ -7,4 +7,5 @@ public interface SysUserService
         extends IService<SysUser> {
     boolean userExists(String username);
     void createUser(SysUser user);
+    Integer getIdByUsername(String username);
 }

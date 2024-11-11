@@ -1,6 +1,8 @@
 spring:
   application:
     name: snow-cloud-drive
+  thymeleaf:
+    cache: false
   datasource:
     url: jdbc:mysql://localhost:3307/snow_cloud_drive?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root

@@ -35,6 +35,7 @@ public class DBUserDetailManagement implements UserDetailsManager, UserDetailsPa
         sysUser.setUsername(user.getUsername());
         sysUser.setPassword(user.getPassword());
         sysUser.setRole(user.getAuthorities().toString());
+        sysUser.setEnable(true);
         systemUserMapper.insert(sysUser);
     }
 

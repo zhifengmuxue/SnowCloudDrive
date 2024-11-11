@@ -1,5 +1,6 @@
 package top.zfmx.snowclouddrive.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -18,10 +19,12 @@ public class SysUserServiceImpl
 
     private final PasswordEncoder passwordEncoder;
     private final DBUserDetailManagement dbUserDetailManagement;
+    private final SysUserMapper sysUserMapper;
     @Autowired
-    public SysUserServiceImpl(PasswordEncoder passwordEncoder, DBUserDetailManagement dbUserDetailManagement) {
+    public SysUserServiceImpl(PasswordEncoder passwordEncoder, DBUserDetailManagement dbUserDetailManagement, SysUserMapper sysUserMapper) {
         this.passwordEncoder = passwordEncoder;
         this.dbUserDetailManagement = dbUserDetailManagement;
+        this.sysUserMapper = sysUserMapper;
     }
     @Override
     public boolean userExists(String username) {
@@ -34,6 +37,12 @@ public class SysUserServiceImpl
                 .roles("USER")
                 .build();
         dbUserDetailManagement.createUser(userDetails);
+    }
+    @Override
+    public Integer getIdByUsername(String username){
+        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(SysUser::getUsername, username);
+        return sysUserMapper.selectOne(queryWrapper).getId();
     }
 }
 
