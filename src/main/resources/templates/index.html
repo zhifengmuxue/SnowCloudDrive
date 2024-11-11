@@ -27,7 +27,8 @@
                     <a class="nav-link" href="/">我的文件</a>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link btn btn-link" data-bs-toggle="modal" data-bs-target="#uploadFileModal">上传文件</button>
+                    <button class="nav-link btn btn-link"
+                            th:onclick="uploadFile([[${breadcrumb}]])">上传文件</button>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">设置</a>
@@ -110,7 +111,6 @@
                         <input type="text" class="form-control" id="newName" name="newName" required>
                     </div>
                     <input type="hidden" id="fileId" name="fileId">
-<!--                    <input type="hidden" id="renameCurrentFolderId" name="currentFolderId">-->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
                         <button type="submit" class="btn btn-primary">重命名</button>
@@ -139,6 +139,7 @@
                         <label for="fileInput" class="form-label">选择文件</label>
                         <input type="file" class="form-control" id="fileInput" name="fileInput" required onchange="updateFileName()">
                     </div>
+                    <input type="hidden" id="breadcrumb" name="breadcrumb">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
                         <button type="submit" class="btn btn-primary">上传</button>

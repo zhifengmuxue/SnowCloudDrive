@@ -58,4 +58,11 @@ public class FileFolderServiceImpl
         return fileFolderMapper.selectList(queryWrapper);
     }
 
+    @Override
+    public Integer getFolderIdByPath(String parentPath) {
+        QueryWrapper<FileFolder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(FileFolder::getPath, parentPath);
+        return fileFolderMapper.selectOne(queryWrapper).getId();
+    }
+
 }

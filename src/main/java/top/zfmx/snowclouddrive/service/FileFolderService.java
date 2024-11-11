@@ -12,4 +12,5 @@ public interface FileFolderService
 
     List<FileFolder> listByParentId(Integer folderId);
     List<FileFolder> listByOwnAndFold(Integer userId, Integer folderId);
+    Integer getFolderIdByPath(String parentPath);
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import top.zfmx.snowclouddrive.entity.FileFolder;
+import top.zfmx.snowclouddrive.service.FileFolderService;
 import top.zfmx.snowclouddrive.service.FileService;
 import top.zfmx.snowclouddrive.service.SysUserService;
 
@@ -19,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Controller
 @RequestMapping("/file")
@@ -26,35 +29,45 @@ public class FileController {
     private final String path = "D:\\project\\SnowCloudDrive\\files";
     private final SysUserService sysUserService;
     private final FileService fileService;
-
+    private final FileFolderService fileFolderService;
     @Autowired
-    public FileController(SysUserService sysUserService, FileService fileService) {
+    public FileController(SysUserService sysUserService, FileService fileService, FileFolderService fileFolderService) {
         this.sysUserService = sysUserService;
         this.fileService = fileService;
+        this.fileFolderService = fileFolderService;
     }
 
     @PostMapping("/upload")
     public String upload(@RequestParam("fileName") String fileName,
-                         @RequestParam("fileInput") MultipartFile file)
+                         @RequestParam("fileInput") MultipartFile file,
+                         @RequestParam(value = "breadcrumb", required = false) String breadcrumb)
             throws IOException {
+        top.zfmx.snowclouddrive.entity.File fileEntity = new top.zfmx.snowclouddrive.entity.File();
         if(!file.isEmpty()) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String savePath = path +"\\"+ user.getUsername();
-            File filePath = new File(savePath + File.separator + fileName);
+            String savePath = path +"\\"+ user.getUsername() + "\\" + breadcrumb;
+
+            File filePath = new File(savePath + fileName);
             if(!filePath.getParentFile().exists()) {
                 if(!filePath.getParentFile().mkdirs())
                     throw new IOException("创建目录失败");
             }
-            file.transferTo(filePath);
-            top.zfmx.snowclouddrive.entity.File fileEntity = new top.zfmx.snowclouddrive.entity.File();
-            fileEntity.setPath(savePath + File.separator + fileName);
+
+            fileEntity.setPath(savePath + fileName);
             fileEntity.setFilename(fileName);
             fileEntity.AutoSize(file.getSize());
             fileEntity.setOwnerId(sysUserService.getIdByUsername(user.getUsername()));
-            fileEntity.setFolderId(null);
+            String parentPath = savePath.substring(0, savePath.lastIndexOf("\\"));
+            System.out.println(parentPath);
+            if (parentPath.equals(path + "\\" + user.getUsername())) {
+                fileEntity.setFolderId(null);
+            } else {
+                fileEntity.setFolderId(fileFolderService.getFolderIdByPath(parentPath));
+            }
             fileService.save(fileEntity);
+            file.transferTo(filePath);
         }
-        return "redirect:/";
+        return "redirect:/?folderId=" + fileEntity.getFolderId();
     }
 
     @RequestMapping("/download")
@@ -91,7 +104,7 @@ public class FileController {
             file.setPath(newPath);
             fileService.updateById(file);
         }
-        return "redirect:/";
+        return "redirect:/?folderId=" + file.getFolderId();
     }
 
     @PostMapping("/delete")
@@ -101,6 +114,6 @@ public class FileController {
         if (deleteFile.delete()) {
             fileService.deleteById(Integer.valueOf(fileId));
         }
-        return "redirect:/";
+        return "redirect:/?folderId=" ;
     }
 }

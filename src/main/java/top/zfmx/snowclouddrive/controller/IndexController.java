@@ -64,7 +64,7 @@ public class IndexController {
         }
 
         // 将数据传递到视图
-        System.out.println("currentFolder: " + currentFolder);
+        System.out.println("breadcrumb: " + breadcrumb);
         model.addAttribute("currentFolder", currentFolder);
         model.addAttribute("files", files);
         model.addAttribute("folders", folders);

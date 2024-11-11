@@ -1,6 +1,13 @@
-function openFolder(folderName) {
-    alert('打开文件夹: ' + folderName);
+function uploadFile(breadcrumb) {
+    var path = '';
+    for (var i = 0; i < breadcrumb.length; i++) {
+        path += breadcrumb[i].folderName + '\\';
+    }
+    document.getElementById('breadcrumb').value = path;
+    const uploadFileModal = new bootstrap.Modal(document.getElementById('uploadFileModal'));
+    uploadFileModal.show();
 }
+
 function updateFileName() {
     const fileInput = document.getElementById('fileInput');
     const fileNameInput = document.getElementById('fileName');
@@ -24,7 +31,7 @@ function openDeleteConfirmModal(fileId) {
 
 function openRenameFolderModal(folderId, currentFolderName) {
     document.getElementById('folderId').value = folderId;
-    document.getElementById('newFolderName').value = currentFolderName; // 填充当前名称
+    document.getElementById('newFolderName').value = currentFolderName;
     const renameFolderModal = new bootstrap.Modal(document.getElementById('renameFolderModal'));
     renameFolderModal.show();
 }

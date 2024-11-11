@@ -9,4 +9,5 @@ public interface FileService
         extends IService<File> {
     void deleteById(Integer id);
     List<File> listByOwnAndFold(Integer userId, Integer folderId);
+
 }

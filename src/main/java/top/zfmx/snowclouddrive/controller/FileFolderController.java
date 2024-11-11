@@ -58,7 +58,7 @@ public class FileFolderController {
             fileFolder.setPath(newPath);
             fileFolderService.updateById(fileFolder);
         }
-        return "redirect:/";
+        return "redirect:/?folderId=" + fileFolder.getParentId();
     }
 
     @PostMapping("/delete")
@@ -72,7 +72,7 @@ public class FileFolderController {
         }
 
         fileFolderService.removeById(folderId);
-        return "redirect:/";
+        return "redirect:/?folderId=" + fileFolder.getParentId();
     }
 
     private void deleteRecursively(File file) {
