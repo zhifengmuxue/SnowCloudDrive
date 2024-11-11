@@ -42,8 +42,12 @@ function openDeleteFolderConfirmModal(folderId) {
     deleteFolderConfirmModal.show();
 }
 
-function setFolderId(folderId) {
-    document.getElementById('createCurrentFolderId').value = folderId;
+function setFolderId(breadcrumb) {
+    var path = '';
+    for (var i = 0; i < breadcrumb.length; i++) {
+        path += breadcrumb[i].folderName + '\\';
+    }
+    document.getElementById('folderBreadcrumb').value = path;
     const createFolderModal = new bootstrap.Modal(document.getElementById('createFolderModal'));
     createFolderModal.show();
 }

@@ -55,7 +55,7 @@
         </nav>
 
         <button class="btn btn-success" style="background-color: #4eb7ad"
-                th:onclick="${currentFolder != null} ? 'setFolderId(' + ${currentFolder.id} + ')' : 'setFolderId(null)'">新建文件夹</button>
+                th:onclick="setFolderId([[${breadcrumb}]])">新建文件夹</button>
     </div>
 
     <div class="row">
@@ -187,7 +187,7 @@
                         <label for="folderName" class="form-label">文件夹名称</label>
                         <input type="text" class="form-control" id="folderName" name="folderName" required>
                     </div>
-                    <input type="hidden" id="createCurrentFolderId" name="currentFolderId">
+                    <input type="hidden" id="folderBreadcrumb" name="breadcrumb">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
                         <button type="submit" class="btn btn-primary">创建</button>

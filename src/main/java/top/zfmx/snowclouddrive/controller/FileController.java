@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import top.zfmx.snowclouddrive.entity.FileFolder;
 import top.zfmx.snowclouddrive.service.FileFolderService;
 import top.zfmx.snowclouddrive.service.FileService;
 import top.zfmx.snowclouddrive.service.SysUserService;
@@ -21,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @Controller
 @RequestMapping("/file")
@@ -103,6 +101,9 @@ public class FileController {
             file.setFilename(newName);
             file.setPath(newPath);
             fileService.updateById(file);
+        }
+        if (file.getFolderId() == null) {
+            return "redirect:/";
         }
         return "redirect:/?folderId=" + file.getFolderId();
     }

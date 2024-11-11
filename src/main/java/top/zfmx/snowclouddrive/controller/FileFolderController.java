@@ -28,11 +28,18 @@ public class FileFolderController {
 
     @PostMapping("/create")
     public String create(@RequestParam("folderName") String folderName,
-                         @RequestParam(value = "currentFolderId", required = false) Integer currentFolderId) {
+                         @RequestParam("breadcrumb") String breadcrumb) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(breadcrumb);
         Integer OwnId = sysUserService.getIdByUsername(user.getUsername());
-        String savePath = path + "\\" + user.getUsername() + "\\" + folderName;
+        String savePath = path + "\\" + user.getUsername() + "\\" + breadcrumb + folderName;
+
         File directory = new File(savePath);
+        String parentPath = savePath.substring(0, savePath.lastIndexOf("\\"));
+        Integer currentFolderId = null;
+        if (!parentPath.equals(path + "\\" + user.getUsername()))
+            currentFolderId = fileFolderService.getFolderIdByPath(parentPath);
+
 
         if (!directory.exists()) {
             boolean created = directory.mkdirs();
@@ -40,6 +47,9 @@ public class FileFolderController {
                 throw new RuntimeException("无法创建文件夹: " + savePath);
             }
             fileFolderService.createFolder(folderName, savePath, OwnId, currentFolderId);
+        }
+        if (currentFolderId == null) {
+            return "redirect:/";
         }
         return "redirect:/?folderId=" + currentFolderId;
     }
@@ -72,6 +82,9 @@ public class FileFolderController {
         }
 
         fileFolderService.removeById(folderId);
+        if (fileFolder.getParentId() ==null){
+            return "redirect:/";
+        }
         return "redirect:/?folderId=" + fileFolder.getParentId();
     }
 
