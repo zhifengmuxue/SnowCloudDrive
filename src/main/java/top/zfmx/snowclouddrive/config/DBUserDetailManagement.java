@@ -10,7 +10,12 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 import top.zfmx.snowclouddrive.entity.SysUser;
 import top.zfmx.snowclouddrive.mapper.SysUserMapper;
-
+/**
+ * 从数据库中获取用户信息
+ * 用于Spring Security的用户信息管理
+ * @author zfmx
+ * @version 0.0.2
+ */
 @Component
 public class DBUserDetailManagement implements UserDetailsManager, UserDetailsPasswordService {
 
@@ -26,6 +31,10 @@ public class DBUserDetailManagement implements UserDetailsManager, UserDetailsPa
         return null;
     }
 
+    /**
+     * 创建用户
+     * @param user 用户信息
+     */
     @Override
     public void createUser(UserDetails user) {
         if (userExists(user.getUsername())) {
@@ -54,6 +63,11 @@ public class DBUserDetailManagement implements UserDetailsManager, UserDetailsPa
 
     }
 
+    /**
+     * 判断用户是否存在
+     * @param username 用户名
+     * @return 用户是否存在
+     */
     @Override
     public boolean userExists(String username) {
         QueryWrapper<SysUser> userQueryWrapper = new QueryWrapper<>();
@@ -62,6 +76,12 @@ public class DBUserDetailManagement implements UserDetailsManager, UserDetailsPa
         return user != null;
     }
 
+    /**
+     * 通过用户名获取用户信息
+     * @param username 用户名
+     * @return 用户信息
+     * @throws UsernameNotFoundException 用户不存在
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         QueryWrapper<SysUser> userQueryWrapper = new QueryWrapper<>();

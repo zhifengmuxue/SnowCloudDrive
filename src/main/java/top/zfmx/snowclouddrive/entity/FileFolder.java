@@ -10,6 +10,13 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 文件夹实体类
+ * 用于存储文件夹信息
+ * 包括文件夹名、路径、所有者ID、父文件夹ID、创建时间、更新时间
+ * @author zfmx
+ * @version 0.0.1
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

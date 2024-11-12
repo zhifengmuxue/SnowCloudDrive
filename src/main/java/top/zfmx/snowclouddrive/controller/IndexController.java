@@ -16,6 +16,14 @@ import top.zfmx.snowclouddrive.service.SysUserService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+/**
+ * 主页控制器
+ * 用于处理主页的请求
+ * 包括文件夹和文件的展示
+ * @author zfmx
+ * @version 0.0.1
+ */
 @Controller
 public class IndexController {
 
@@ -30,6 +38,12 @@ public class IndexController {
         this.sysUserService = sysUserService;
     }
 
+    /**
+     * 主页
+     * @param folderId 文件夹ID
+     * @param model 模型
+     * @return 主页视图
+     */
     @GetMapping("/")
     public String index(@RequestParam(value = "folderId", required = false) Integer folderId, Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -56,15 +70,12 @@ public class IndexController {
             // 如果当前有文件夹，确保反转顺序，这样从根到子文件夹依次排列
             Collections.reverse(breadcrumb);
 
-            // 获取子文件夹和文件
             List<FileFolder> subFolders = fileFolderService.listByParentId(folderId);
             model.addAttribute("subFolders", subFolders);
         } else {
             currentFolder = null;
         }
 
-        // 将数据传递到视图
-        System.out.println("breadcrumb: " + breadcrumb);
         model.addAttribute("currentFolder", currentFolder);
         model.addAttribute("files", files);
         model.addAttribute("folders", folders);

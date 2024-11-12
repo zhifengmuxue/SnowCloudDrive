@@ -10,6 +10,12 @@ import top.zfmx.snowclouddrive.service.FileService;
 
 import java.util.List;
 
+/**
+ * 文件服务实现类
+ * 用于实现文件的上传、下载、删除等操作
+ * @author zfmx
+ * @version 0.0.1
+ */
 @Service
 public class FileServiceImpl
         extends ServiceImpl<FileMapper, File>

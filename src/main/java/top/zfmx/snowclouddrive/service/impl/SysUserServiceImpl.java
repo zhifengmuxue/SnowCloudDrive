@@ -11,7 +11,12 @@ import top.zfmx.snowclouddrive.config.DBUserDetailManagement;
 import top.zfmx.snowclouddrive.entity.SysUser;
 import top.zfmx.snowclouddrive.mapper.SysUserMapper;
 import top.zfmx.snowclouddrive.service.SysUserService;
-
+/**
+ * 用户服务实现类
+ * 用于实现用户的创建、查询等操作
+ * @author zfmx
+ * @version 0.0.1
+ */
 @Service
 public class SysUserServiceImpl
         extends ServiceImpl<SysUserMapper, SysUser>

@@ -1,6 +1,7 @@
 package top.zfmx.snowclouddrive.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -13,11 +14,19 @@ import top.zfmx.snowclouddrive.service.SysUserService;
 
 import java.io.File;
 
+/**
+ * 文件夹控制器
+ * 用于处理文件夹的创建、重命名、删除等操作
+ * @author zfmx
+ * @version 0.0.1
+ */
 @Controller
 @RequestMapping("/fileFolder")
 public class FileFolderController {
 
-    private final String path = "D:\\project\\SnowCloudDrive\\files";
+    @Value("${SnowCloudDrive.file.path}")
+    private String path;
+
     private final SysUserService sysUserService;
     private final FileFolderService fileFolderService;
     @Autowired
@@ -26,6 +35,12 @@ public class FileFolderController {
         this.fileFolderService = fileFolderService;
     }
 
+    /**
+     * 创建文件夹
+     * @param folderName 文件夹名称
+     * @param breadcrumb 文件夹路径
+     * @return 重定向到文件夹路径
+     */
     @PostMapping("/create")
     public String create(@RequestParam("folderName") String folderName,
                          @RequestParam("breadcrumb") String breadcrumb) {
@@ -39,8 +54,6 @@ public class FileFolderController {
         Integer currentFolderId = null;
         if (!parentPath.equals(path + "\\" + user.getUsername()))
             currentFolderId = fileFolderService.getFolderIdByPath(parentPath);
-
-
         if (!directory.exists()) {
             boolean created = directory.mkdirs();
             if (!created) {
@@ -54,13 +67,18 @@ public class FileFolderController {
         return "redirect:/?folderId=" + currentFolderId;
     }
 
+    /**
+     * 重命名文件夹
+     * @param folderName 新文件夹名称
+     * @param folderId 文件夹ID
+     * @return 重定向到文件夹路径
+     */
     @PostMapping("/rename")
     public String rename(@RequestParam("newFolderName") String folderName,
                          @RequestParam("folderId") Integer folderId) {
         FileFolder fileFolder = fileFolderService.getById(folderId);
         String oldPath = fileFolder.getPath();
         String newPath = oldPath.substring(0, oldPath.lastIndexOf("\\") + 1) + folderName;
-        System.out.println(oldPath + " " + newPath);
         File newFile = new File(newPath);
         File oldFile = new File(oldPath);
         if (oldFile.renameTo(newFile)) {
@@ -70,7 +88,11 @@ public class FileFolderController {
         }
         return "redirect:/?folderId=" + fileFolder.getParentId();
     }
-
+    /**
+     * 删除文件夹
+     * @param folderId 文件夹ID
+     * @return 重定向到文件夹路径
+     */
     @PostMapping("/delete")
     public String delete(@RequestParam("deleteFolderId") Integer folderId) {
         FileFolder fileFolder = fileFolderService.getById(folderId);
@@ -88,6 +110,10 @@ public class FileFolderController {
         return "redirect:/?folderId=" + fileFolder.getParentId();
     }
 
+    /**
+     * 递归删除文件夹
+     * @param file 文件夹
+     */
     private void deleteRecursively(File file) {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
