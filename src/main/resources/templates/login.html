@@ -80,11 +80,9 @@
             right: 20px;
             cursor: pointer;
         }
-
     </style>
 </head>
 <body>
-
 <div class="main">
     <div class="container a-container" id="a-container">
         <form id="a-form" class="form" th:action="@{/login}" method="post">
@@ -96,6 +94,9 @@
                 <input class="form__input" type="password" name="password" id="password" placeholder="密码" required>
             </label>
 
+            <div th:if="${loginError}" class="error-message" style="color: red;">
+                <p th:text="${loginError}"></p>
+            </div>
             <button class="button submit" type="submit">登录</button>
         </form>
     </div>
@@ -110,6 +111,10 @@
             <label>
                 <input class="form__input" type="password" placeholder="密码" name="password" required>
             </label>
+
+            <div th:if="${registerError}" class="error-message" style="color: red;">
+                <p th:text="${registerError}"></p>
+            </div>
             <button class="button submit">注册</button>
         </form>
     </div>
@@ -124,11 +129,19 @@
     const aContainer = document.getElementById('a-container');
     const bContainer = document.getElementById('b-container');
 
-    let isLogin = false;
+    let isRegister = [[${isRegister}]]
+
+    if (isRegister) {
+        aContainer.style.transform = 'translateX(-100%)'; // 隐藏登录框
+        bContainer.style.transform = 'translateX(0)'; // 显示注册框
+    } else {
+        aContainer.style.transform = 'translateX(0)'; // 显示登录框
+        bContainer.style.transform = 'translateX(100%)'; // 隐藏注册框
+    }
 
     switchBtn.addEventListener('click', () => {
-        isLogin = !isLogin;
-        if (isLogin) {
+        isRegister = !isRegister;
+        if (isRegister) {
             aContainer.style.transform = 'translateX(-100%)';
             bContainer.style.transform = 'translateX(0)';
         } else {

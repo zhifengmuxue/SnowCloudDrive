@@ -1,6 +1,7 @@
 package top.zfmx.snowclouddrive.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,9 @@ import java.io.File;
 @RequestMapping("/fileFolder")
 public class FileFolderController {
 
-    private final String path = "D:\\project\\SnowCloudDrive\\files";
+    @Value("${SnowCloudDrive.file.path}")
+    private String path;
+
     private final SysUserService sysUserService;
     private final FileFolderService fileFolderService;
     @Autowired
@@ -39,8 +42,6 @@ public class FileFolderController {
         Integer currentFolderId = null;
         if (!parentPath.equals(path + "\\" + user.getUsername()))
             currentFolderId = fileFolderService.getFolderIdByPath(parentPath);
-
-
         if (!directory.exists()) {
             boolean created = directory.mkdirs();
             if (!created) {
@@ -60,7 +61,6 @@ public class FileFolderController {
         FileFolder fileFolder = fileFolderService.getById(folderId);
         String oldPath = fileFolder.getPath();
         String newPath = oldPath.substring(0, oldPath.lastIndexOf("\\") + 1) + folderName;
-        System.out.println(oldPath + " " + newPath);
         File newFile = new File(newPath);
         File oldFile = new File(oldPath);
         if (oldFile.renameTo(newFile)) {

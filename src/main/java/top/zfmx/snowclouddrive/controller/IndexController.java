@@ -56,15 +56,12 @@ public class IndexController {
             // 如果当前有文件夹，确保反转顺序，这样从根到子文件夹依次排列
             Collections.reverse(breadcrumb);
 
-            // 获取子文件夹和文件
             List<FileFolder> subFolders = fileFolderService.listByParentId(folderId);
             model.addAttribute("subFolders", subFolders);
         } else {
             currentFolder = null;
         }
 
-        // 将数据传递到视图
-        System.out.println("breadcrumb: " + breadcrumb);
         model.addAttribute("currentFolder", currentFolder);
         model.addAttribute("files", files);
         model.addAttribute("folders", folders);

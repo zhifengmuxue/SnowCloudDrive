@@ -20,7 +20,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
         );
         http.formLogin(login -> login
-                .loginPage("/login").permitAll());
+                .loginPage("/login").permitAll()
+                .failureUrl("/login?error=true").permitAll());
         http.logout(LogoutConfigurer::permitAll);
         http.cors(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);

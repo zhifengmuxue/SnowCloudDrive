@@ -70,6 +70,7 @@
                         </a>
                         <button class="btn btn-primary btn-sm"
                                 th:onclick="openRenameFolderModal([[${folder.id}]], [[${folder.folderName}]])">重命名</button>
+
                         <button class="btn btn-danger btn-sm" th:onclick="openDeleteFolderConfirmModal([[${folder.id}]])">删除</button>
                     </div>
                 </div>
@@ -86,6 +87,8 @@
                             <button class="btn btn-primary btn-sm"
                                     th:onclick="openRenameModal([[${file.id}]], [[${file.filename}]])">
                                 重命名</button>
+                            <button class="btn btn-secondary btn-sm"
+                                    th:onclick="openShareFileModal([[${file.id}]], [[${file.filename}]])">分享</button>
                             <button class="btn btn-danger btn-sm"
                                     th:onclick="openDeleteConfirmModal([[${file.id}]])">删除</button>
                         </div>
@@ -238,6 +241,32 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                         <button type="submit" class="btn btn-danger">删除</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 分享文件 -->
+<div class="modal fade" id="shareFileModal" tabindex="-1" aria-labelledby="shareFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareFileModalLabel">分享文件</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/file/share}" method="post">
+                    <div class="mb-3">
+                        <label for="shareLink" class="form-label">分享链接</label>
+                        <input type="text" class="form-control" id="shareLink" name="shareLink" readonly>
+                    </div>
+                    <p>您可以将此链接分享给其他人。</p>
+                    <input type="hidden" id="shareFileId" name="fileId">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" onclick="copyShareLink()">复制链接</button>
                     </div>
                 </form>
             </div>
