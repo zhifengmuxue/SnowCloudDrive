@@ -27,6 +27,13 @@ public class FileFolderServiceImpl
         this.fileFolderMapper = fileFolderMapper;
     }
 
+    /**
+     * 创建文件夹
+     * @param folderName 文件夹名
+     * @param path 文件夹路径
+     * @param ownId 所有者ID
+     * @param parentId 父文件夹ID
+     */
     @Override
     public void createFolder(String folderName, String path, Integer ownId, Integer parentId) {
         FileFolder fileFolder = new FileFolder();
@@ -37,6 +44,10 @@ public class FileFolderServiceImpl
         fileFolderMapper.insert(fileFolder);
     }
 
+    /**
+     * 删除文件夹
+     * @param folderId 文件夹ID
+     */
     @Override
     public List<FileFolder> listByParentId(Integer folderId) {
         QueryWrapper<FileFolder> queryWrapper = new QueryWrapper<>();
@@ -44,6 +55,12 @@ public class FileFolderServiceImpl
         return fileFolderMapper.selectList(queryWrapper);
     }
 
+    /**
+     * 根据userId和folderId查询文件夹
+     * @param userId 所有者ID
+     * @param folderId 父文件夹ID
+     * @return 文件夹列表
+     */
     @Override
     public List<FileFolder> listByOwnAndFold(Integer userId, Integer folderId) {
         QueryWrapper<FileFolder> queryWrapper = new QueryWrapper<>();
@@ -56,6 +73,11 @@ public class FileFolderServiceImpl
         return fileFolderMapper.selectList(queryWrapper);
     }
 
+    /**
+     * 根据文件夹路径查询文件夹ID
+     * @param parentPath 文件夹路径
+     * @return 文件夹ID
+     */
     @Override
     public Integer getFolderIdByPath(String parentPath) {
         QueryWrapper<FileFolder> queryWrapper = new QueryWrapper<>();

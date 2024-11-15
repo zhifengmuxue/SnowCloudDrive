@@ -31,10 +31,21 @@ public class SysUserServiceImpl
         this.dbUserDetailManagement = dbUserDetailManagement;
         this.sysUserMapper = sysUserMapper;
     }
+
+    /**
+     * 判断用户是否存在
+     * @param username 用户名
+     * @return 是否存在
+     */
     @Override
     public boolean userExists(String username) {
         return dbUserDetailManagement.userExists(username);
     }
+
+    /**
+     * 创建用户
+     * @param user 用户
+     */
     @Override
     public void createUser(SysUser user) {
         UserDetails userDetails = User.withUsername(user.getUsername())
@@ -43,6 +54,12 @@ public class SysUserServiceImpl
                 .build();
         dbUserDetailManagement.createUser(userDetails);
     }
+
+    /**
+     * 根据用户名查询用户
+     * @param username 用户名
+     * @return 用户
+     */
     @Override
     public Integer getIdByUsername(String username){
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();

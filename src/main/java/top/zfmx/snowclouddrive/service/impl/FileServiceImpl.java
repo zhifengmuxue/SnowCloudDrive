@@ -26,12 +26,21 @@ public class FileServiceImpl
         this.fileMapper = fileMapper;
     }
 
-
+    /**
+     * 根据文件夹ID删除文件
+     * @param id 文件ID
+     */
     @Override
     public void deleteById(Integer id) {
         fileMapper.deleteById(id);
     }
 
+    /**
+     * 根据文件夹ID和userID查询文件
+     * @param folderId 文件夹ID
+     * @param userId 所有者ID
+     * @return 文件列表
+     */
     @Override
     public List<File> listByOwnAndFold(Integer userId, Integer folderId) {
         QueryWrapper<File> queryWrapper = new QueryWrapper<>();
