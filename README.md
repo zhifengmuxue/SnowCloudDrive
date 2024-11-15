@@ -1,4 +1,4 @@
-# SnowCLoudDrive
+# SnowCloudDrive
 
 本项目为 Java EE 主流框架的课程作业，仅做springboot学习使用。
 
